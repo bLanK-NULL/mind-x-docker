@@ -1,0 +1,68 @@
+# version: '3.8'
+
+services:
+  mysql:
+    container_name: mind-x-db
+    image: mysql:8.0.39
+    # image: mysql:5.7
+    ports:
+      - "${DB_PORT}:3306"
+    environment:
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      # 以下是用来创建普通用户的
+      # MYSQL_USER: ${DB_USER}
+      # MYSQL_PASSWORD: ${DB_PASSWORD}
+
+    volumes:
+      - /root/blank/mind-x-docker/docker/volume/db:/var/lib/mysql
+      - /root/blank/mind-x-docker/docker/volume/mysql-log:/var/log/mysql # 映射日志目录，宿主机:容器
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql # 添加这一行
+      - ./my.cnf:/etc/mysql/conf.d/my.cnf # 添加这一行
+    restart: always
+    networks:
+      - common_network
+    command: [ "--character-set-server=utf8mb4", "--collation-server=utf8mb4_unicode_ci", "--datadir=/var/lib/mysql", "--default-authentication-plugin=mysql_native_password" ]
+
+  api:
+    container_name: mind-x-server
+    build: ../mind-x-server
+    ports:
+      - "${API_PORT}:3000"
+    environment:
+      MODE: PRODUCTION
+
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_HOST: ${DB_HOST}
+    volumes:
+      - /root/blank/mind-x-docker/mind-x-server:/mind-x-server
+    networks:
+      - common_network
+    # restart: unless-stopped
+    restart: on-failure
+    depends_on:
+      - mysql
+
+  nginx:
+    container_name: mind-x-web
+    build:
+      context: ../mind-x
+      # context: /root/my/myProject/mind-x-docker/mind-x
+      dockerfile: Dockerfile
+    ports:
+      - "${WEB_PORT}:80"
+    volumes:
+      # - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+    networks:
+      - common_network
+    depends_on:
+      - mysql
+      - api
+    environment:
+      VUE_APP_BASE_URL: http://127.0.0.1:${API_PORT}
+networks:
+  common_network:
+    driver: bridge
