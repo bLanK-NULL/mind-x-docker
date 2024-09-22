@@ -5,8 +5,8 @@ services:
     container_name: mind-x-db
     image: mysql:8.0.39
     # image: mysql:5.7
-    ports:
-      - "${DB_PORT}:3306"
+    # ports:
+    #   - "${DB_PORT}:3306"
     environment:
       MYSQL_DATABASE: ${DB_NAME}
       MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
@@ -15,8 +15,8 @@ services:
       # MYSQL_PASSWORD: ${DB_PASSWORD}
 
     volumes:
-      - /root/blank/mind-x-docker/docker/volume/db:/var/lib/mysql
-      - /root/blank/mind-x-docker/docker/volume/mysql-log:/var/log/mysql # 映射日志目录，宿主机:容器
+      - /my-docker-container/mind-x-docker/docker/volume/db:/var/lib/mysql
+      - /my-docker-container/mind-x-docker/docker/volume/mysql-log:/var/log/mysql # 映射日志目录，宿主机:容器
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql # 添加这一行
       - ./my.cnf:/etc/mysql/conf.d/my.cnf # 添加这一行
     restart: always
@@ -27,8 +27,8 @@ services:
   api:
     container_name: mind-x-server
     build: ../mind-x-server
-    ports:
-      - "${API_PORT}:3000"
+    # ports:
+    #   - "${API_PORT}:3000"
     environment:
       MODE: PRODUCTION
 
@@ -37,7 +37,7 @@ services:
       DB_PASSWORD: ${DB_PASSWORD}
       DB_HOST: ${DB_HOST}
     volumes:
-      - /root/blank/mind-x-docker/mind-x-server:/mind-x-server
+      - /my-docker-container/mind-x-docker/mind-x-server:/mind-x-server
     networks:
       - common_network
     # restart: unless-stopped
@@ -61,8 +61,8 @@ services:
     depends_on:
       - mysql
       - api
-    environment:
-      VUE_APP_BASE_URL: http://127.0.0.1:${API_PORT}
+    # environment:
+      # VUE_APP_BASE_URL: http://127.0.0.1:${API_PORT}
 networks:
   common_network:
     driver: bridge
