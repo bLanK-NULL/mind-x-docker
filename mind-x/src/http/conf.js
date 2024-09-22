@@ -4,9 +4,9 @@ import { infoMsg } from "@/hooks/Message/globalMessage";
 import router from '@/router/index.js'
 // import { md5 } from 'js-md5'
 
-
 const $http = axios.create({
-    baseURL: process.env.VUE_APP_BASE_URL + '/api',
+    // baseURL: process.env.VUE_APP_BASE_URL + '/api',
+    baseURL: '/api',
 })
 //无需token的白名单
 const whiteListApi = ['/login']
