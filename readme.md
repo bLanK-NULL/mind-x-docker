@@ -20,3 +20,9 @@ DB_NAME=mind-x-docker
 # web端口
 WEB_PORT=3002 
 ```
+
+# Issue
+
+如果出现 `ERROR [api internal] load metadata for docker.io/library/node:`
+
+请手动拉取镜像 `docker pull node:20`
