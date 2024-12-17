@@ -15,8 +15,8 @@ services:
       # MYSQL_PASSWORD: ${DB_PASSWORD}
 
     volumes:
-      - /my-docker-container/mind-x-docker/docker/volume/db:/var/lib/mysql
-      - /my-docker-container/mind-x-docker/docker/volume/mysql-log:/var/log/mysql # 映射日志目录，宿主机:容器
+      - ./volume/mysql:/var/lib/mysql
+      - ./volume/mysql-log:/var/log/mysql # 映射日志目录，宿主机:容器
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql # 添加这一行
       - ./my.cnf:/etc/mysql/conf.d/my.cnf # 添加这一行
     restart: always
@@ -36,8 +36,8 @@ services:
       DB_USER: ${DB_USER}
       DB_PASSWORD: ${DB_PASSWORD}
       DB_HOST: ${DB_HOST}
-    volumes:
-      - /my-docker-container/mind-x-docker/mind-x-server:/mind-x-server
+    # volumes:
+      # - /my-docker-container/mind-x-docker/mind-x-server:/mind-x-server
     networks:
       - common_network
     # restart: unless-stopped
