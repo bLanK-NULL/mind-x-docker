@@ -1,4 +1,4 @@
-#FROM node:20.17.0-alpine
+# FROM node:20.17.0
 FROM node:20
 
 # 设置npm镜像源为阿里云

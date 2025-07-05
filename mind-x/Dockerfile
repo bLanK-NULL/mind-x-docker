@@ -1,3 +1,4 @@
+# FROM node:20.17.0 AS build
 FROM node:20 AS build
 
 # 设置npm镜像源为阿里云
@@ -14,8 +15,8 @@ COPY . .
 
 RUN npm run build
 
-#FROM docker.mirrors.sjtug.sjtu.edu.cn/library/nginx:latest
-FROM nginx:latest
+#FROM docker.mirrors.sjtug.sjtu.edu.cn/library/nginx:stable-perl
+FROM nginx:stable-perl
 
 # Copy the built Vue.js files from the 'build' stage to the Nginx web server directory
 COPY --from=build ./dist /usr/share/nginx/html
