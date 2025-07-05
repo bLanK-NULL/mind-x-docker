@@ -1,4 +1,4 @@
-FROM node:20.17.0 AS build
+FROM node:20 AS build
 
 # 设置npm镜像源为阿里云
 RUN npm config set registry https://registry.npmmirror.com
